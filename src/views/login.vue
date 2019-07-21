@@ -7,7 +7,7 @@
           <el-input v-model="loginForm.username" placeholder="用户名" prefix-icon="myicon myicon-user"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" placeholder="密码" prefix-icon="myicon myicon-key" @keyup.native='login'></el-input>
+          <el-input v-model="loginForm.password" placeholder="密码" prefix-icon="myicon myicon-key" @keyup.native.enter='login'></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="login" class="login-btn">登录</el-button>
@@ -44,6 +44,8 @@ export default {
           login(this.loginForm)
             .then(res => {
               if (res.data.meta.status === 200) {
+                console.log(res)
+                localStorage.setItem('itcast_manage_34_token', res.data.data.token)
                 this.$router.push({ name: 'home' })
               } else {
                 this.$message({

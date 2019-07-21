@@ -4,8 +4,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 引入登录组件
 import Login from '@/views/login.vue'
-// 映入首页的组件
+// 引入首页的组件
 import Home from '@/views/home.vue'
+// 引入欢迎页面
+import Welcome from '@/views/welcome.vue'
+// 引入users组件
+import Users from '@/views/users/user.vue'
 // 使用
 Vue.use(VueRouter)
 // 创建路由配置
@@ -25,7 +29,20 @@ var router = new VueRouter({
     {
       name: 'home',
       path: '/home',
-      component: Home
+      component: Home,
+      redirect: { name: 'welcome' },
+      children: [
+        {
+          name: 'welcome',
+          path: 'welcome',
+          component: Welcome
+        },
+        {
+          name: 'users',
+          path: 'users',
+          component: Users
+        }
+      ]
     }
   ]
 })
