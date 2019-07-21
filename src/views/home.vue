@@ -1,15 +1,15 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+    <div class="home">
+        这是首页,欢迎你
+    </div>
 </template>
 
 <script>
-
 export default {
-  name: 'app'
+
 }
 </script>
 
 <style>
+
 </style>
