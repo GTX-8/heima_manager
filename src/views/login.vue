@@ -19,6 +19,7 @@
 
 <script>
 import { login } from '@/api/user_index.js'
+import { setTimeout } from 'timers'
 export default {
   data () {
     return {
@@ -36,6 +37,9 @@ export default {
   },
   methods: {
     login () {
+      setTimeout(() => {
+        console.log(this)
+      })
       // 再次实现数据的验证
       // 我们可以调用表单的validate方法实现数据的验证,在验证完成的时候,会调用传入的回调函数,这个
       // 回调函数有一个参数valid,如果这个参数为true,则说明验证通过(可以继续你的登录请求),否则验证失败(组织你的登录请求并给出提示)
@@ -44,7 +48,6 @@ export default {
           login(this.loginForm)
             .then(res => {
               if (res.data.meta.status === 200) {
-                console.log(res)
                 localStorage.setItem('itcast_manage_34_token', res.data.data.token)
                 this.$router.push({ name: 'home' })
               } else {

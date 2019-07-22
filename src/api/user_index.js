@@ -22,3 +22,37 @@ export const getAllUserList = (params) => {
     params
   })
 }
+
+// 添加用户接口
+export const addUserList = (data) => {
+  return axios({
+    url: 'users',
+    method: 'post',
+    data
+  })
+}
+
+// 编辑用户借口
+export const editUserList = (data) => {
+  return axios({
+    url: `users/${data.id}`,
+    method: 'put',
+    data: { email: data.email, mobile: data.mobile }
+  })
+}
+
+// 删除用户接口
+export const deletUserList = (id) => {
+  return axios({
+    url: `users/${id}`,
+    method: 'delete'
+  })
+}
+
+// 根据id修改用户状态
+export const updateUserState = (uid, type) => {
+  return axios({
+    url: `users/${uid}/state/${type}`,
+    method: 'put'
+  })
+}

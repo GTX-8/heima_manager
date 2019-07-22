@@ -50,7 +50,7 @@
         <el-header>
              <span class="myicon myicon-menu toggle-btn" @click="iscollapse = !iscollapse"></span>
              <span class="system-title">电商后台管理系统</span>
-             <a href="javascript:;" class="welcome">退出</a>
+             <a href="javascript:;" class="welcome" @click='toggleUsers'>退出</a>
         </el-header>
         <el-main>
           <router-view></router-view>
@@ -65,6 +65,11 @@ export default {
   data () {
     return {
       iscollapse: false
+    }
+  },
+  methods: {
+    toggleUsers () {
+      this.$router.push({ name: 'login' })
     }
   }
 }
