@@ -10,6 +10,10 @@ import Home from '@/views/home.vue'
 import Welcome from '@/views/welcome.vue'
 // 引入users组件
 import Users from '@/views/users/user.vue'
+// 引入right组件
+import Right from '@/right/right.vue'
+// 引入role组件
+import Role from '@/right/role.vue'
 // 使用
 Vue.use(VueRouter)
 // 创建路由配置
@@ -41,6 +45,16 @@ var router = new VueRouter({
           name: 'users',
           path: 'users',
           component: Users
+        },
+        {
+          name: 'rights',
+          path: 'rights',
+          component: Right
+        },
+        {
+          name: 'roles',
+          path: 'roles',
+          component: Role
         }
       ]
     }

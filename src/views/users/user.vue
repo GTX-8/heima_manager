@@ -33,10 +33,11 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-tooltip content="编辑" placement="top">
+
               <el-button type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row)"></el-button>
             </el-tooltip>
-            <el-tooltip content="分配" placement="top">
-              <el-button type="primary" icon="el-icon-check"></el-button>
+            <el-tooltip content="分配角色" placement="top">
+              <el-button type="primary" icon="el-icon-check"  @click="allotUsers(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip content="删除" placement="top">
                <el-button type="text" @click="del(scope.row.id)"><el-button type="primary" icon="el-icon-delete"></el-button></el-button>
@@ -78,9 +79,9 @@
       </div>
     </el-dialog>
     <!-- 用户编辑操作 -->
-    <el-dialog title="添加用户" :visible.sync="editdialogFormVisible">
+    <el-dialog title="编辑用户" :visible.sync="editdialogFormVisible">
       <el-form :model="editForm" ref="editForm" :rules="rules" :label-width="formLabelWidth">
-        <el-form-item label="用户名:" prop="editname">
+        <el-form-item label="用户名:">
           <el-input v-model="editForm.editname" disabled></el-input>
         </el-form-item>
         <el-form-item label="邮箱:" prop="email">
@@ -95,18 +96,44 @@
         <el-button type="primary" @click="editsubmit">确 定</el-button>
       </div>
     </el-dialog>
+     <!-- 分配角色对话框 -->
+   <el-dialog title="分配角色" :visible.sync="allotdialogFormVisible">
+      <el-form :model="roleForm" ref="editForm" :rules="rules" :label-width="formLabelWidth">
+        <el-form-item label="活动名称:">{{roleForm.username}}</el-form-item>
+        <el-form-item label="选择角色:">
+          <template>
+        <el-select v-model="value" placeholder="请选择">
+          <el-option
+            v-for="item in roleList"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id">
+          </el-option>
+      </el-select>
+</template>
+          </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="allotdialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allotsubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
+
 </template>
 
 <script>
-import { getAllUserList, addUserList, editUserList, deletUserList, updateUserState } from '@/api/user_index.js'
+import { getAllUserList, addUserList, editUserList, deletUserList, updateUserState, grantUserRole } from '@/api/user_index.js'
+import { getAllRoleList } from '@/api/role_index.js'
 export default {
   data () {
     return {
+      value: '',
       total: 0,
       value2: 'true',
       adddialogFormVisible: false,
       editdialogFormVisible: false,
+      allotdialogFormVisible: false,
       formLabelWidth: '80px',
       userObj: {
         query: '',
@@ -125,6 +152,12 @@ export default {
         id: '',
         editname: ''
       },
+      roleForm: {
+        username: '',
+        rid: '',
+        id: ''
+      },
+      roleList: [],
       // 表格数据源,它是一个数组,里面的每一个元素都是一个对象
       userList: [],
       // 表单验证规则
@@ -153,6 +186,41 @@ export default {
     }
   },
   methods: {
+    // 角色分配
+    allotsubmit () {
+      this.roleForm.rid = this.value
+      grantUserRole(this.roleForm)
+        .then(res => {
+          if (res.data.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: res.data.meta.msg
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              messgae: res.data.meta.msg
+            })
+          }
+          this.allotdialogFormVisible = false
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // 展示角色数据
+    allotUsers (row) {
+      this.allotdialogFormVisible = true
+      this.roleForm.username = row.username
+      getAllRoleList()
+        .then(res => {
+          if (res.data.meta.status === 200) {
+            this.roleList = res.data.data
+            this.roleForm.id = row.id
+            this.value = row.rid
+          }
+        })
+    },
     // 修改用户状态
     async changeState (id, type) {
       let res = await updateUserState(id, type)
